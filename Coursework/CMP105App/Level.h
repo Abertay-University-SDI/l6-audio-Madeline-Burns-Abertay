@@ -18,39 +18,39 @@ public:
 	void update(float dt) override;
 	void render() override;
 
-    void reset();
+	void reset();
 
 private:
-    void UpdateCamera();
-    void manageCollisions();
+	void UpdateCamera();
+	void manageCollisions();
 
-    void writeHighScore(float timeTaken);  
-    void displayScoreboard();
+	void writeHighScore(float timeTaken);
+	void displayScoreboard();
 
-    void loadLevel(std::string fileName, sf::Vector2f worldSize); 
+	void loadLevel(std::string fileName, sf::Vector2f worldSize); 
 
-    sf::View m_cameraView;
+	sf::View m_cameraView;
+	AudioManager& m_audio;
 
-    // Entities
-    Rabbit* m_playerRabbit;
-    std::vector<Sheep*> m_sheepList;
-    std::vector<GameObject> m_walls; 
-    GameObject m_goal;
-    sf::Texture m_sheepTexture;
-    sf::Texture m_rabbitTexture;
-    GameObject m_bgFarm;
+	// Entities
+	Rabbit* m_playerRabbit;
+	std::vector<Sheep*> m_sheepList;
+	std::vector<GameObject> m_walls;
+	GameObject m_goal;
+	sf::Texture m_sheepTexture;
+	sf::Texture m_rabbitTexture;
+	GameObject m_bgFarm;
 
-    // Level Data
-    sf::FloatRect m_levelBounds;
-    bool m_isGameOver;
+	// Level Data
+	sf::FloatRect m_levelBounds;
+	bool m_isGameOver;
 
-    // UI & Timer
-    sf::Clock m_gameTimer;      // We will replace this with a float, although clocks are cool.
-    sf::Font m_font;
-    sf::Text m_timerText;
-    sf::Text m_winText;
+	// UI & Timer
+	sf::Clock m_gameTimer;      // We will replace this with a float, although clocks are cool.
+	sf::Font m_font;
+	sf::Text m_timerText;
+	sf::Text m_winText;
 	
-    sf::Text m_scoreboardText;  
-    std::string m_levelName;
-
+	sf::Text m_scoreboardText;
+	std::string m_levelName;
 };

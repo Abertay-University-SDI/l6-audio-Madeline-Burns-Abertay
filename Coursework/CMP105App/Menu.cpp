@@ -7,6 +7,7 @@ Menu::Menu(sf::RenderWindow& window, Input& input, GameState& state, AudioManage
 	m_prompt.setCharacterSize(24);
 	m_prompt.setPosition({ 100,150 });
 	if (!m_font.openFromFile("font/arial.ttf")) std::cerr << "failed to get font in menu";
+	audio.addMusic("corporate", "sfx/corporate.mp3");
 }
 
 void Menu::handleInput(float dt)
