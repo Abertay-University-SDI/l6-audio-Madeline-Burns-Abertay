@@ -1,13 +1,14 @@
 #include "Menu.h"
 
 Menu::Menu(sf::RenderWindow& window, Input& input, GameState& state, AudioManager& audio) :
-	BaseLevel(window, input, state, audio), m_prompt(m_font)
+	BaseLevel(window, input, state, audio), m_prompt(m_font), m_audio(audio)
 {
 	m_prompt.setString("Press space to start");
 	m_prompt.setCharacterSize(24);
 	m_prompt.setPosition({ 100,150 });
 	if (!m_font.openFromFile("font/arial.ttf")) std::cerr << "failed to get font in menu";
 	audio.addMusic("corporate", "sfx/corporate.mp3");
+	reset(); // why wasn't this already here
 }
 
 void Menu::handleInput(float dt)
@@ -20,6 +21,9 @@ void Menu::handleInput(float dt)
 void Menu::reset()
 {
 	m_window.setView(m_window.getDefaultView());
+	m_audio.stopAllMusic();
+	m_audio.playMusicbyName("corporate");
+	m_audio.getMusic("corporate")->setLooping(true);
 }
 
 void Menu::render()

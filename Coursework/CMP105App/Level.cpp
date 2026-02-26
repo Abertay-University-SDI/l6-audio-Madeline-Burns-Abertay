@@ -1,7 +1,7 @@
 #include "Level.h"
 
 Level::Level(sf::RenderWindow& hwnd, Input& in, GameState& gs, AudioManager& audio) :
-	BaseLevel(hwnd, in, gs, audio), m_timerText(m_font), m_winText(m_font), m_scoreboardText(m_font)
+	BaseLevel(hwnd, in, gs, audio), m_timerText(m_font), m_winText(m_font), m_scoreboardText(m_font), m_audio(audio)
 {
 	if (!m_font.openFromFile("font/arial.ttf")) {
 		std::cerr << "Error loading font" << std::endl;
@@ -11,8 +11,8 @@ Level::Level(sf::RenderWindow& hwnd, Input& in, GameState& gs, AudioManager& aud
 	// expensive file i/o we will do only once
 	if (!m_rabbitTexture.loadFromFile("gfx/rabbit_sheet.png")) std::cerr << "no rabbit texture";
 	if (!m_sheepTexture.loadFromFile("gfx/sheep_sheet.png")) std::cerr << "no sheep texture";
-	m_audio = audio;
 	m_audio.addMusic("nature", "sfx/nature.mp3");
+	m_audio.getMusic("nature")->setLooping(true);
 	m_audio.addSound("yay", "sfx/yay.mp3");
 	m_audio.addSound("bah", "sfx/bah.mp3");
 
@@ -72,6 +72,9 @@ void Level::reset()
 	loadLevel("data/level1.txt", levelSize);
 
 	m_gameTimer.restart();
+
+	m_audio.stopAllMusic();
+	m_audio.playMusicbyName("nature");
 }
 
 void Level::UpdateCamera()
@@ -107,7 +110,7 @@ void Level::UpdateCamera()
 void Level::handleInput(float dt)
 {
 	if (m_input.isPressed(sf::Keyboard::Scancode::Escape))
-		m_gameState.setCurrentState(State::MENU);
+		m_gameState.setCurrentState(State::PAUSE);
 	m_playerRabbit->handleInput(dt);
 }
 
@@ -137,7 +140,10 @@ void Level::manageCollisions()
 			}
 		}
 		if (Collision::checkBoundingBox(*m_sheepList[i], m_goal))
+		{
 			m_sheepList[i]->collideWithGoal(m_goal);
+			m_audio.playSoundbyName("yay");
+		}
 	}
 	for (auto wall : m_walls)
 	{
@@ -245,6 +251,7 @@ void Level::loadLevel(std::string fileName, sf::Vector2f worldSize)
 			newSheep->setTexture(&m_sheepTexture);
 			newSheep->setSize({ 32,32 });
 			newSheep->setWorldSize(worldSize.x, worldSize.y);
+			newSheep->setAudioPointer(&m_audio);
 			m_sheepList.push_back(newSheep);
 		}
 		else if (object == "RABBIT")
